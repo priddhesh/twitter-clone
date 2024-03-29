@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mysqldbUser:
+    platform: linux/x86_64
+    env_file:
+      - ./.env
+    image: mysql:5.7
+    container_name: mysqldbUser
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+  nodejs:
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      - mysqldbUser
+    links: 
+      - mysqldbUser
+    ports:
+      - $NODE_LOCAL_PORT:$PORT
+    
